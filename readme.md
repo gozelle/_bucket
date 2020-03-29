@@ -5,15 +5,16 @@
 示例：
 
 ```go
-	bucket := NewBucket(2 * time.Second)
-	go func() {
-		for {
-			bucket.Push(M(time.Now().String()))
-			time.Sleep(600 * time.Millisecond)
-		}
-	}()
+bucket := NewBucket(2 * time.Second)
 
-	bucket.First(func(messages []Message) {
-		fmt.Println(len(messages), messages)
-	})
+go func() {
+	for {
+		bucket.Push(M(time.Now().String()))
+		time.Sleep(600 * time.Millisecond)
+	}
+}()
+
+bucket.First(func(messages []Message) {
+	fmt.Println(len(messages), messages)
+})
 ```
