@@ -34,14 +34,14 @@ func (p *Bucket) setNext() {
 	p.next = p.now() + int64(p.duration)
 }
 
-func (p *Bucket) call(callback func(first bool, messages []Message)) {
+func (p *Bucket) call(callback func(messages []Message)) {
 
 	p.mu.Lock()
 	messages := make([]Message, len(p.messages))
 	copy(messages, p.messages)
 	p.mu.Unlock()
 
-	callback(p.first, messages)
+	callback(messages)
 	p.messages = make([]Message, 0)
 	p.setNext()
 }
@@ -57,16 +57,16 @@ func (p *Bucket) Push(message Message) {
 	p.mu.Unlock()
 }
 
-func (p *Bucket) Pop(callback func(first bool, messages []Message)) {
+// 将消息全部弹出
+func (p *Bucket) Pop(callback func(messages []Message)) {
 	for {
 		if p.now() >= p.next {
 			p.call(callback)
 		}
-		time.Sleep(300 * time.Millisecond)
 	}
 }
 
-func (p *Bucket) First(callback func(first bool, messages []Message)) {
+func (p *Bucket) First(callback func(messages []Message)) {
 	for {
 		if p.change && p.first {
 			p.first = false
@@ -75,6 +75,5 @@ func (p *Bucket) First(callback func(first bool, messages []Message)) {
 			p.first = true
 			p.call(callback)
 		}
-		time.Sleep(300 * time.Millisecond)
 	}
 }
