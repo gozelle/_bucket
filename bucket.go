@@ -59,7 +59,7 @@ func (p *Bucket) Push(message Message) {
 
 func (p *Bucket) PushWait(message Message, wait time.Duration) {
 	p.mu.Lock()
-	p.next += int64(wait)
+	p.next = p.now() + int64(wait)
 	if len(p.messages) == 0 {
 		p.change = true
 	} else {
