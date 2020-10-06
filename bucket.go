@@ -57,6 +57,18 @@ func (p *Bucket) Push(message Message) {
 	p.mu.Unlock()
 }
 
+func (p *Bucket) PushWait(message Message, wait time.Duration) {
+	p.mu.Lock()
+	p.next = p.now() + int64(wait)
+	if len(p.messages) == 0 {
+		p.change = true
+	} else {
+		p.change = false
+	}
+	p.messages = append(p.messages, message)
+	p.mu.Unlock()
+}
+
 // 将消息全部弹出
 func (p *Bucket) Pop(callback func(messages []Message)) {
 	for {
