@@ -1,3 +1,3 @@
-module github.com/koyeo/bucket
+module github.com/koyeo/_bucket
 
-go 1.13
+go 1.15
