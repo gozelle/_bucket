@@ -1,4 +1,4 @@
-package _robot
+package _bucket
 
 import (
 	"testing"
