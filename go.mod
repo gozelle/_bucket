@@ -1,3 +1,3 @@
 module github.com/gozelle/_bucket
 
-go 1.15
+go 1.16
